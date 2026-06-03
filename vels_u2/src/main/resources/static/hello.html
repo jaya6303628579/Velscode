@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VEL's U2 Event Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: #D4AF37;
+      --gold-light: #F4E4A6;
+      --gold-dark: #B8860B;
+      --blush: #f5e6e8;
+      --rose: #d4a0a7;
+      --deep: #121212;
+      --cream: #fdf8f2;
+      --charcoal: #2c2c2c;
+      --ivory: #fffdf8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--ivory);
+      color: var(--charcoal);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Cursor */
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transition: transform 0.15s ease;
+      mix-blend-mode: multiply;
+    }
+    .cursor-follower {
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transition: all 0.35s cubic-bezier(.23,1,.32,1);
+      opacity: 0.6;
+    }
+
+    /* Petals */
+    .petal {
+      position: fixed;
+      width: 10px; height: 14px;
+      background: linear-gradient(135deg, #f7c5d0, #e8a0b0);
+      border-radius: 50% 0 50% 0;
+      pointer-events: none;
+      z-index: 9990;
+      opacity: 0;
+      animation: petalFall linear infinite;
+    }
+    @keyframes petalFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      padding: 18px 0;
+      transition: all 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(253,248,242,0.96);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 2px 30px rgba(201,169,110,0.15);
+      padding: 10px 0;
+    }
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-brand span { color: var(--deep); font-style: italic; }
+    .nav-logo {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      flex-shrink: 0;
+    }
+    /* Hero watermark logo */
+    .hero-logo-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      width: min(460px, 62vw);
+      height: min(460px, 62vw);
+      border-radius: 50%;
+      overflow: hidden;
+      opacity: 0.18;
+      pointer-events: none;
+      user-select: none;
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.35), 0 0 60px rgba(201,169,110,0.2);
+    }
+    .hero-logo-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+    .navbar-nav .nav-link {
+      font-size: 0.75rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--charcoal) !important;
+      margin: 0 10px;
+      position: relative;
+      transition: color 0.3s;
+    }
+    .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+    .navbar-nav .nav-link:hover::after { width: 100%; }
+    .navbar-nav .nav-link:hover { color: var(--gold) !important; }
+    .btn-nav {
+      background: var(--gold);
+      color: #fff !important;
+      padding: 8px 22px !important;
+      border-radius: 2px;
+      letter-spacing: 2px;
+      font-size: 0.7rem !important;
+      transition: all 0.3s;
+    }
+    .btn-nav:hover { background: var(--gold-dark) !important; transform: translateY(-2px); }
+
+    /* HERO */
+    #hero {
+    }
+    #hero::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:url('WhatsApp Image 2026-05-31 at 9.39.34 AM.jpeg') center center/500px no-repeat;
+      opacity:0.08;
+      z-index:1;
+      pointer-events:none;
+    }
+    #hero {
+      min-height: 100vh;
+      background: var(--deep);
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1519741497674-611481863552?w=1800') center/cover no-repeat;
+      opacity: 0.22;
+      transform: scale(1.05);
+      animation: heroPan 20s ease-in-out infinite alternate;
+    }
+    @keyframes heroPan {
+      0%   { transform: scale(1.05) translateX(0); }
+      100% { transform: scale(1.05) translateX(-3%); }
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(26,14,14,0.85) 0%, rgba(26,14,14,0.5) 60%, transparent 100%);
+    }
+    .hero-content { position: relative; z-index: 2; text-align: center; }
+    .hero-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.3s forwards;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      color: #fff;
+      line-height: 1.08;
+      margin-bottom: 12px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+    .hero-title em { color: var(--gold); font-style: italic; }
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: var(--gold-light);
+      font-style: italic;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.7s forwards;
+    }
+    .hero-ctas {
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.9s forwards;
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    }
+    .btn-gold {
+      background: var(--gold);
+      color: #fff;
+      padding: 14px 36px;
+      border: none;
+      border-radius: 2px;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.35s cubic-bezier(.23,1,.32,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-gold::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.15);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+    .btn-gold:hover::before { transform: scaleX(1); }
+    .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(201,169,110,0.4); color: #fff; }
+    .btn-outline-gold {
+      background: transparent;
+      color: var(--gold-light);
+      padding: 13px 36px;
+      border: 1px solid var(--gold);
+      border-radius: 2px;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.35s ease;
+    }
+    .btn-outline-gold:hover {
+      background: var(--gold);
+      color: #fff;
+      transform: translateY(-3px);
+    }
+    .hero-scroll {
+      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+      color: var(--gold); font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      animation: float 2s ease-in-out infinite;
+      z-index: 2;
+    }
+    .hero-scroll i { font-size: 1.1rem; }
+    @keyframes float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-8px)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+    /* DIVIDER */
+    .divider {
+      display: flex; align-items: center; gap: 16px;
+      justify-content: center; margin: 0 auto 20px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1; max-width: 80px;
+      height: 1px; background: var(--gold);
+      opacity: 0.5;
+    }
+    .divider i { color: var(--gold); font-size: 0.8rem; }
+
+    /* SECTION TITLES */
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--deep);
+      line-height: 1.2;
+    }
+    .section-title em { color: var(--gold); font-style: italic; }
+
+    /* ABOUT */
+    #about {
+      padding: 110px 0;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    #about::before {
+      content: 'AURA';
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: 20vw;
+      color: var(--gold);
+      opacity: 0.03;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .about-image-wrap {
+      position: relative;
+    }
+    .about-image-wrap img {
+      width: 100%; height: 520px;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+    .about-badge {
+      position: absolute;
+      bottom: -28px; right: -28px;
+      width: 130px; height: 130px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      color: #fff;
+      animation: spin-slow 12s linear infinite;
+    }
+    @keyframes spin-slow { to { transform: rotate(360deg); } }
+    .about-badge span { font-size: 2rem; font-family: 'Playfair Display', serif; font-weight: 700; line-height:1; }
+    .about-badge small { font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase; text-align: center; }
+    .about-text { padding-left: 50px; }
+    .about-text p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      line-height: 1.9;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .about-stats {
+      display: flex; gap: 40px; margin-top: 30px;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      color: var(--gold);
+      display: block;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    /* SERVICES */
+    #services {
+      padding: 110px 0;
+      background: var(--deep);
+      position: relative;
+    }
+    #services .section-title { color: #fff; }
+    .service-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,169,110,0.2);
+      padding: 44px 36px;
+      border-radius: 2px;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(.23,1,.32,1);
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(201,169,110,0.12), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .service-card:hover::before { opacity: 1; }
+    .service-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold);
+      box-shadow: 0 20px 50px rgba(201,169,110,0.2);
+    }
+    .service-icon {
+      width: 64px; height: 64px;
+      background: rgba(201,169,110,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      transition: all 0.3s;
+    }
+    .service-card:hover .service-icon { background: var(--gold); }
+    .service-icon i { font-size: 1.4rem; color: var(--gold); transition: color 0.3s; }
+    .service-card:hover .service-icon i { color: #fff; }
+    .service-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+    .service-card p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.8;
+    }
+    .service-tag {
+      display: inline-block;
+      margin-top: 18px;
+      font-size: 0.58rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201,169,110,0.4);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* GALLERY */
+    #gallery {
+      padding: 110px 0;
+      background: var(--cream);
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(3, 220px);
+      gap: 12px;
+    }
+    .gallery-item {
+      overflow: hidden;
+      border-radius: 2px;
+      position: relative;
+      cursor: pointer;
+    }
+    .gallery-item:nth-child(1)  { grid-column: 1 / 6;  grid-row: 1 / 3; }
+    .gallery-item:nth-child(2)  { grid-column: 6 / 9;  grid-row: 1 / 2; }
+    .gallery-item:nth-child(3)  { grid-column: 9 / 13; grid-row: 1 / 3; }
+    .gallery-item:nth-child(4)  { grid-column: 6 / 9;  grid-row: 2 / 3; }
+    .gallery-item:nth-child(5)  { grid-column: 1 / 5;  grid-row: 3 / 4; }
+    .gallery-item:nth-child(6)  { grid-column: 5 / 9;  grid-row: 3 / 4; }
+    .gallery-item:nth-child(7)  { grid-column: 9 / 13; grid-row: 3 / 4; }
+    .gallery-item:nth-child(8)  { grid-column: 1 / 5;  grid-row: 4 / 5; }
+    .gallery-item:nth-child(9)  { grid-column: 5 / 9;  grid-row: 4 / 5; }
+    .gallery-item:nth-child(10) { grid-column: 9 / 13; grid-row: 4 / 5; }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(.23,1,.32,1);
+    }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: rgba(26,14,14,0.6);
+      opacity: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.4s;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay i { color: var(--gold); font-size: 1.8rem; }
+
+    /* PACKAGES */
+    #packages {
+      padding: 110px 0;
+      background: var(--ivory);
+    }
+    .pkg-card {
+      border: 1px solid rgba(201,169,110,0.3);
+      border-radius: 2px;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(.23,1,.32,1);
+      position: relative;
+      height: 100%;
+    }
+    .pkg-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 30px 60px rgba(201,169,110,0.2);
+      border-color: var(--gold);
+    }
+    .pkg-card.featured {
+      border-color: var(--gold);
+      box-shadow: 0 20px 50px rgba(201,169,110,0.25);
+    }
+    .pkg-badge {
+      position: absolute;
+      top: 20px; right: -30px;
+      background: var(--gold);
+      color: #fff;
+      font-size: 0.58rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 40px;
+      transform: rotate(45deg);
+    }
+    .pkg-header {
+      background: var(--deep);
+      padding: 36px 30px;
+      text-align: center;
+    }
+    .pkg-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .pkg-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .pkg-price sup { font-size: 1rem; vertical-align: top; margin-top: 12px; display: inline-block; }
+    .pkg-price span { font-size: 0.7rem; color: rgba(255,255,255,0.5); font-family: 'Montserrat', sans-serif; }
+    .pkg-body { padding: 30px; background: #fff; }
+    .pkg-feature {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(201,169,110,0.1);
+      font-size: 0.82rem;
+      color: #555;
+    }
+    .pkg-feature i { color: var(--gold); font-size: 0.75rem; width: 14px; }
+    .pkg-feature.disabled { color: #bbb; }
+    .pkg-feature.disabled i { color: #ddd; }
+
+    /* TESTIMONIALS */
+    #testimonials {
+      padding: 110px 0;
+      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+    }
+    #testimonials::before {
+      content: '"';
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: 30vw;
+      color: rgba(201,169,110,0.04);
+      top: -10%;
+      left: -5%;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .testi-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,169,110,0.15);
+      padding: 44px 36px;
+      border-radius: 2px;
+      position: relative;
+      transition: all 0.3s;
+      height: 100%;
+    }
+    .testi-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-6px);
+    }
+    .testi-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .testi-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.9;
+      font-style: italic;
+      margin-bottom: 28px;
+    }
+    .testi-stars { color: var(--gold); font-size: 0.75rem; margin-bottom: 14px; }
+    .testi-author { display: flex; align-items: center; gap: 14px; }
+    .testi-avatar {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold);
+    }
+    .testi-name { font-size: 0.82rem; font-weight: 600; color: #fff; }
+    .testi-event { font-size: 0.65rem; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
+
+    /* PROCESS */
+    #process {
+      padding: 110px 0;
+      background: var(--cream);
+    }
+    .step-wrap { position: relative; }
+    .step-line {
+      position: absolute;
+      top: 36px;
+      left: calc(50% + 60px);
+      right: -60px;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+    }
+    .step-item { text-align: center; position: relative; }
+    .step-num {
+      width: 72px; height: 72px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--gold);
+      transition: all 0.3s;
+      background: var(--cream);
+      position: relative; z-index: 1;
+    }
+    .step-item:hover .step-num {
+      background: var(--gold);
+      color: #fff;
+      transform: scale(1.1);
+    }
+    .step-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: var(--deep);
+      margin-bottom: 8px;
+    }
+    .step-desc { font-size: 0.78rem; color: #888; line-height: 1.8; }
+
+    /* BOOKING FORM */
+    #booking {
+      padding: 110px 0;
+      background: var(--deep);
+      position: relative;
+    }
+    .form-wrap {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,169,110,0.2);
+      padding: 60px;
+      border-radius: 2px;
+    }
+    .form-control, .form-select {
+      background: rgba(255,255,255,0.06) !important;
+      border: 1px solid rgba(201,169,110,0.25) !important;
+      border-radius: 2px !important;
+      color: #fff !important;
+      padding: 14px 18px !important;
+      font-size: 0.83rem !important;
+      transition: border-color 0.3s !important;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--gold) !important;
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.1) !important;
+      background: rgba(255,255,255,0.09) !important;
+    }
+    .form-control::placeholder { color: rgba(255,255,255,0.35) !important; }
+    .form-label {
+      font-size: 0.65rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .form-select option { background: #1a0e0e; }
+    .success-msg {
+      display: none;
+      background: rgba(201,169,110,0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      padding: 16px 24px;
+      border-radius: 2px;
+      text-align: center;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      margin-top: 20px;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #0e0808;
+      padding: 80px 0 30px;
+    }
+    .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 16px;
+    }
+    .footer-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: rgba(255,255,255,0.45);
+      font-size: 1rem;
+      margin-bottom: 24px;
+    }
+    .footer-social { display: flex; gap: 12px; }
+    .social-btn {
+      width: 38px; height: 38px;
+      border: 1px solid rgba(201,169,110,0.35);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+    .social-btn:hover {
+      background: var(--gold);
+      color: #fff;
+      border-color: var(--gold);
+      transform: translateY(-3px);
+    }
+    .footer-heading {
+      font-size: 0.65rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 22px;
+    }
+    .footer-links { list-style: none; padding: 0; }
+    .footer-links li { margin-bottom: 10px; }
+    .footer-links a {
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-contact-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      margin-bottom: 14px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+    }
+    .footer-contact-item i { color: var(--gold); margin-top: 2px; font-size: 0.75rem; }
+    .footer-divider {
+      border-color: rgba(201,169,110,0.12);
+      margin: 40px 0 24px;
+    }
+    .footer-bottom {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.25);
+      text-align: center;
+    }
+    .footer-bottom span { color: var(--gold); }
+
+    /* ANIMATIONS */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.23,1,.32,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.23,1,.32,1);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.23,1,.32,1);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    /* FLOATING BUTTON */
+    .float-btn {
+      position: fixed;
+      bottom: 30px; right: 30px;
+      width: 54px; height: 54px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 1.2rem;
+      box-shadow: 0 8px 25px rgba(201,169,110,0.5);
+      z-index: 500;
+      text-decoration: none;
+      transition: all 0.3s;
+      opacity: 0;
+    }
+    .float-btn.visible { opacity: 1; }
+    .float-btn:hover { transform: scale(1.1) translateY(-3px); color: #fff; }
+
+    /* RESPONSIVE */
+    @media (max-width: 992px) {
+      .about-text { padding-left: 0; margin-top: 50px; }
+      .about-badge { right: 10px; bottom: -20px; width: 100px; height: 100px; }
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+      }
+      .gallery-item:nth-child(n) { grid-column: auto; grid-row: auto; height: 200px; }
+      .form-wrap { padding: 36px 24px; }
+      .step-line { display: none; }
+    }
+    @media (max-width: 768px) {
+      .about-stats { gap: 20px; }
+      .hero-ctas { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- Falling Petals -->
+<div id="petals-container"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg" id="mainNav">
+  <div class="container">
+    <a class="nav-brand navbar-brand" href="#">
+      <img src="/img/logo.jpeg" alt="VEL's U2 Logo" class="nav-logo" />
+      VEL's U2 <span>Event Management</span>
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span style="color:var(--gold);font-size:1.4rem;"><i class="fas fa-bars"></i></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="#packages">Packages</a></li>
+        <li class="nav-item"><a class="nav-link" href="#testimonials">Reviews</a></li>
+        <li class="nav-item ms-2"><a class="nav-link btn-nav" href="#booking">Book Now</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-logo-bg">
+    <img src="/img/logo.jpeg" alt="" aria-hidden="true" />
+  </div>
+  <div class="hero-content container">
+    <p class="hero-eyebrow">✦ &nbsp; Premium Event Planning & Management &nbsp; ✦</p>
+    <h1 class="hero-title">VEL's U2<br><em>Event Management</em></h1>
+    <p class="hero-subtitle">Turning Your Special Moments Into Beautiful Memories</p>
+    <div class="hero-ctas">
+      <a href="#booking" class="btn-gold">Plan My Wedding</a>
+      <a href="#gallery" class="btn-outline-gold">View Our Work</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-5 reveal-left">
+        <div class="about-image-wrap">
+          <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800" alt="Wedding decoration" />
+          <div class="about-badge">
+            <span>8+</span>
+            <small>Years of Excellence</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7 reveal-right">
+        <div class="about-text">
+          <span class="section-label">Our Story</span>
+          <h2 class="section-title mb-4">We Believe Every <em>Wedding</em><br>Deserves Perfection</h2>
+          <div class="divider justify-content-start">
+            <div style="width:60px;height:1px;background:var(--gold);opacity:0.5;"></div>
+            <i class="fas fa-diamond" style="color:var(--gold);font-size:0.6rem;"></i>
+          </div>
+          <p>VEL’s U2 EVENT MANAGEMENT Weddings & Events was born from a single belief — that love deserves to be celebrated in the most extraordinary way. We craft immersive wedding experiences that are uniquely yours, down to the last bloom and candle flicker.</p>
+          <p>From intimate gatherings to grand celebrations, our team of passionate designers, decorators, and coordinators work tirelessly to transform your vision into a breathtaking reality.</p>
+          <div class="about-stats">
+            <div class="stat">
+              <span class="stat-num counter" data-target="450">0</span>
+              <span class="stat-label">Events Done</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num counter" data-target="98">0</span>
+              <span class="stat-label">% Happy Couples</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num counter" data-target="40">0</span>
+              <span class="stat-label">Design Styles</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="text-center mb-70 reveal">
+      <span class="section-label">What We Offer</span>
+      <h2 class="section-title mb-3">Our <em>Signature</em> Services</h2>
+      <p style="color:rgba(255,255,255,0.45);font-size:0.85rem;max-width:480px;margin:0 auto;">From decor to dining, we orchestrate every element of your celebration with artistry and precision.</p>
+    </div>
+    <div class="row g-4 mt-4">
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.1s">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-spa"></i></div>
+          <h4>Floral Decoration</h4>
+          <p>Exquisite floral arrangements tailored to your theme — from cascading arches to table centerpieces that steal the show.</p>
+          <span class="service-tag">Signature Service</span>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.2s">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-lightbulb"></i></div>
+          <h4>Lighting & Ambiance</h4>
+          <p>Fairy lights, chandeliers, gobo projections, and mood lighting that transform any venue into a dreamscape.</p>
+          <span class="service-tag">Most Popular</span>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.3s">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-gem"></i></div>
+          <h4>Mandap & Stage Design</h4>
+          <p>Bespoke mandap and stage setups combining traditional aesthetics with contemporary elegance for your perfect ceremony.</p>
+          <span class="service-tag">Premium</span>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.1s">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-utensils"></i></div>
+          <h4>Catering Coordination</h4>
+          <p>Curated menus, live stations, and seamless catering management for unforgettable culinary experiences.</p>
+          <span class="service-tag">Full Service</span>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.2s">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-camera"></i></div>
+          <h4>Photography & Film</h4>
+          <p>Cinematic storytelling — candid moments, editorial portraits, and highlight films that last a lifetime.</p>
+          <span class="service-tag">Exclusive</span>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.3s">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-music"></i></div>
+          <h4>Entertainment & Music</h4>
+          <p>Live bands, DJs, performers, and custom playlists that set the perfect tone for every moment of your day.</p>
+          <span class="service-tag">Bespoke</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="container-fluid px-4">
+    <div class="text-center mb-5 reveal">
+      <span class="section-label">Our Portfolio</span>
+      <h2 class="section-title mb-3">Moments We've <em>Crafted</em></h2>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item">
+        <img src="/img/img01.jpeg" alt="Event 1" />
+        <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/img02.jpeg" alt="Event 2" />
+        <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/img03.jpeg" alt="Event 3" />
+        <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/img04.jpeg" alt="Event 4" />
+        <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/img05.jpeg" alt="Event 5" />
+        <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/img06.jpeg" alt="Event 6" />
+        <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/img07.jpeg" alt="Event 7" />
+        <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/img08.jpeg" alt="Event 8" />
+        <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/img09.jpeg" alt="Event 9" />
+        <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/img10.jpeg" alt="Event 10" />
+        <div class="gallery-overlay"><i class="fas fa-expand"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section id="packages">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <span class="section-label">Pricing</span>
+      <h2 class="section-title mb-3">Choose Your <em>Perfect</em> Package</h2>
+      <p style="color:#888;font-size:0.85rem;max-width:480px;margin:0 auto;">Transparent pricing with no hidden surprises — just pure wedding magic.</p>
+    </div>
+    <div class="row g-4 mt-2">
+      <div class="col-lg-4 reveal" style="transition-delay:0.1s">
+        <div class="pkg-card">
+          <div class="pkg-header">
+            <div class="pkg-name">Silver Bloom</div>
+            <div class="pkg-price"><sup>₹</sup>85,000 <span>starting</span></div>
+          </div>
+          <div class="pkg-body">
+            <div class="pkg-feature"><i class="fas fa-check"></i> Basic Floral Decoration</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Mandap Setup</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Fairy Light Canopy</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> 1 Event Coordinator</div>
+            <div class="pkg-feature disabled"><i class="fas fa-times"></i> Photography Package</div>
+            <div class="pkg-feature disabled"><i class="fas fa-times"></i> Catering Coordination</div>
+            <div class="pkg-feature disabled"><i class="fas fa-times"></i> Entertainment Setup</div>
+            <div class="mt-4">
+              <a href="#booking" class="btn-outline-gold d-block text-center py-3" style="border-radius:2px;">Get Started</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 reveal" style="transition-delay:0.2s">
+        <div class="pkg-card featured">
+          <div class="pkg-badge">Most Popular</div>
+          <div class="pkg-header">
+            <div class="pkg-name">Golden Aura</div>
+            <div class="pkg-price"><sup>₹</sup>1,85,000 <span>starting</span></div>
+          </div>
+          <div class="pkg-body">
+            <div class="pkg-feature"><i class="fas fa-check"></i> Premium Floral Decoration</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Designer Mandap & Stage</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Full Lighting Design</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> 2 Event Coordinators</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Photography Package</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Catering Coordination</div>
+            <div class="pkg-feature disabled"><i class="fas fa-times"></i> Live Entertainment</div>
+            <div class="mt-4">
+              <a href="#booking" class="btn-gold d-block text-center py-3" style="border-radius:2px;">Book This Package</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 reveal" style="transition-delay:0.3s">
+        <div class="pkg-card">
+          <div class="pkg-header">
+            <div class="pkg-name">Royal Diamond</div>
+            <div class="pkg-price"><sup>₹</sup>3,50,000 <span>starting</span></div>
+          </div>
+          <div class="pkg-body">
+            <div class="pkg-feature"><i class="fas fa-check"></i> Luxury Floral Arrangements</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Grand Mandap & Stage</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Cinematic Lighting</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Dedicated Event Team</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Full Photography & Film</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Catering Coordination</div>
+            <div class="pkg-feature"><i class="fas fa-check"></i> Live Band & Entertainment</div>
+            <div class="mt-4">
+              <a href="#booking" class="btn-outline-gold d-block text-center py-3" style="border-radius:2px;">Get Started</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <span class="section-label">How It Works</span>
+      <h2 class="section-title mb-3">Your Journey to a <em>Perfect</em> Day</h2>
+    </div>
+    <div class="row g-0 mt-5 position-relative">
+      <div class="col step-wrap reveal" style="transition-delay:0.1s">
+        <div class="step-line"></div>
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div class="step-title">Consultation</div>
+          <div class="step-desc">We sit down to understand your dream, vision, and budget in a warm personal meeting.</div>
+        </div>
+      </div>
+      <div class="col step-wrap reveal" style="transition-delay:0.2s">
+        <div class="step-line"></div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div class="step-title">Design Planning</div>
+          <div class="step-desc">Our designers craft a bespoke mood board and event plan tailored to your taste.</div>
+        </div>
+      </div>
+      <div class="col step-wrap reveal" style="transition-delay:0.3s">
+        <div class="step-line"></div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div class="step-title">Vendor Selection</div>
+          <div class="step-desc">We handpick the finest vendors — florists, chefs, photographers — to execute your vision.</div>
+        </div>
+      </div>
+      <div class="col step-wrap reveal" style="transition-delay:0.4s">
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div class="step-title">Your Celebration</div>
+          <div class="step-desc">Sit back and relish every moment while we orchestrate a flawless event behind the scenes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <span class="section-label">Love Stories</span>
+      <h2 class="section-title mb-3" style="color:#fff;">What Couples <em>Say</em></h2>
+    </div>
+    <div class="row g-4 mt-3">
+      <div class="col-lg-4 reveal" style="transition-delay:0.1s">
+        <div class="testi-card">
+          <div class="testi-quote">"</div>
+          <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="testi-text">VEL’s U2 EVENT MANAGEMENT Weddings turned our dream into a reality beyond what we could have ever imagined. Every detail was perfect, from the flowers to the lighting — it felt like a fairytale.</p>
+          <div class="testi-author">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="testi-avatar" alt="Priya" />
+            <div>
+              <div class="testi-name">Priya & Rohit Sharma</div>
+              <div class="testi-event">✦ Garden Wedding, Mumbai</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 reveal" style="transition-delay:0.2s">
+        <div class="testi-card">
+          <div class="testi-quote">"</div>
+          <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="testi-text">Working with the VEL’s U2 EVENT MANAGEMENT team was the best decision we made. They handled everything seamlessly and made sure we enjoyed every single moment without any stress.</p>
+          <div class="testi-author">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="testi-avatar" alt="Ananya" />
+            <div>
+              <div class="testi-name">Ananya & Vikram Nair</div>
+              <div class="testi-event">✦ Palace Wedding, Jaipur</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 reveal" style="transition-delay:0.3s">
+        <div class="testi-card">
+          <div class="testi-quote">"</div>
+          <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="testi-text">The mandap decoration was absolutely breathtaking. Our guests still talk about how stunning it was. VEL’s U2 EVENT MANAGEMENT delivered a celebration that was deeply personal and stunning.</p>
+          <div class="testi-author">
+            <img src="https://randomuser.me/api/portraits/women/23.jpg" class="testi-avatar" alt="Meera" />
+            <div>
+              <div class="testi-name">Meera & Arjun Patel</div>
+              <div class="testi-event">✦ Beachside Wedding, Goa</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <div class="text-center mb-5 reveal">
+          <span class="section-label">Get In Touch</span>
+          <h2 class="section-title mb-3" style="color:#fff;">Begin Your <em>Journey</em> With Us</h2>
+          <p style="color:rgba(255,255,255,0.45);font-size:0.85rem;">Fill in the form and our team will get back to you within 24 hours.</p>
+        </div>
+        <div class="form-wrap reveal">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="form-label">Bride's Name</label>
+              <input type="text" class="form-control" placeholder="Enter name" id="brideName" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Groom's Name</label>
+              <input type="text" class="form-control" placeholder="Enter name" id="groomName" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" placeholder="your@email.com" id="email" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" placeholder="+91 XXXXX XXXXX" id="phone" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Wedding Date</label>
+              <input type="date" class="form-control" id="weddingDate" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Expected Guests</label>
+              <select class="form-select" id="guests">
+                <option value="">Select range</option>
+                <option>Below 100</option>
+                <option>100 – 300</option>
+                <option>300 – 500</option>
+                <option>500 – 1000</option>
+                <option>1000+</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Preferred Package</label>
+              <select class="form-select" id="pkg">
+                <option value="">Select package</option>
+                <option>Silver Bloom</option>
+                <option>Golden Aura</option>
+                <option>Royal Diamond</option>
+                <option>Custom Package</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Venue City</label>
+              <input type="text" class="form-control" placeholder="Mumbai, Delhi, Goa..." id="city" />
+            </div>
+            <div class="col-12">
+              <label class="form-label">Tell Us Your Vision</label>
+              <textarea class="form-control" rows="4" placeholder="Describe your dream wedding — themes, colors, special requests..." id="vision"></textarea>
+            </div>
+            <div class="col-12 text-center">
+              <button class="btn-gold px-5 py-3" onclick="submitForm()" style="font-size:0.75rem;letter-spacing:3px;">
+                <i class="fas fa-paper-plane me-2"></i> Send My Enquiry
+              </button>
+              <div class="success-msg" id="successMsg">
+                <i class="fas fa-heart me-2" style="color:var(--gold)"></i> Thank you! We'll reach out within 24 hours to begin crafting your dream wedding. 🌸
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <span class="footer-brand">VEL’s U2 EVENT MANAGEMENT</span>
+        <p class="footer-tagline">"Where love becomes art."</p>
+        <p style="color:rgba(255,255,255,0.35);font-size:0.78rem;line-height:1.9;margin-bottom:24px;">Creating extraordinary celebrations across India since 2016. Every event is our masterpiece.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-pinterest-p"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-6">
+        <div class="footer-heading">Quick Links</div>
+        <ul class="footer-links">
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#packages">Packages</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
+          <li><a href="#booking">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="footer-heading">Services</div>
+        <ul class="footer-links">
+          <li><a href="#">Floral Decoration</a></li>
+          <li><a href="#">Mandap Design</a></li>
+          <li><a href="#">Lighting & Ambiance</a></li>
+          <li><a href="#">Photography & Film</a></li>
+          <li><a href="#">Catering</a></li>
+          <li><a href="#">Entertainment</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3">
+        <div class="footer-heading">Contact Us</div>
+        <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i> VEL’s U2 EVENT MANAGEMENT <br> Dindigul, Tamil Nadu</div>
+        <div class="footer-contact-item"><i class="fas fa-phone"></i> +91 9566785416</div>
+        <!--<div class="footer-contact-item"><i class="fas fa-envelope"></i> hello@auraweddings.in</div>-->
+        <div class="footer-contact-item"><i class="fas fa-clock"></i> Mon–Sat: 9 AM – 7 PM</div>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="footer-bottom">
+      © 2024 <span>VEL’s U2 EVENT MANAGEMENT Weddings & Events</span>. All rights reserved. Crafted with <span>♥</span> in Dindigul.
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll to Top -->
+<a href="#hero" class="float-btn" id="floatBtn"><i class="fas fa-arrow-up"></i></a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── Custom Cursor ──────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('cursorFollower');
+let mx = 0, my = 0, fx = 0, fy = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx - 6 + 'px';
+  cursor.style.top = my - 6 + 'px';
+});
+function animateCursor() {
+  fx += (mx - fx) * 0.12;
+  fy += (my - fy) * 0.12;
+  follower.style.left = fx - 18 + 'px';
+  follower.style.top = fy - 18 + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+document.querySelectorAll('a,button,.service-card,.pkg-card,.gallery-item').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; follower.style.transform = 'scale(1.5)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; follower.style.transform = 'scale(1)'; });
+});
+
+// ── Navbar Scroll ──────────────────────────────────────────────
+const nav = document.getElementById('mainNav');
+const floatBtn = document.getElementById('floatBtn');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+  floatBtn.classList.toggle('visible', window.scrollY > 400);
+});
+
+// ── Falling Petals ─────────────────────────────────────────────
+const petalContainer = document.getElementById('petals-container');
+function spawnPetal() {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  const size = Math.random() * 8 + 7;
+  p.style.cssText = `
+    width:${size}px;height:${size * 1.4}px;
+    left:${Math.random() * 100}vw;
+    animation-duration:${Math.random() * 6 + 7}s;
+    animation-delay:${Math.random() * 2}s;
+    opacity:0.7;
+    transform:rotate(${Math.random()*360}deg);
+  `;
+  petalContainer.appendChild(p);
+  setTimeout(() => p.remove(), 12000);
+}
+setInterval(spawnPetal, 700);
+
+// ── Scroll Reveal ──────────────────────────────────────────────
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+revealEls.forEach(el => observer.observe(el));
+
+// ── Counter Animation ──────────────────────────────────────────
+const counters = document.querySelectorAll('.counter');
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = +el.dataset.target;
+      let current = 0;
+      const step = target / 60;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) { el.textContent = target + '+'; clearInterval(timer); }
+        else el.textContent = Math.floor(current);
+      }, 25);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObserver.observe(c));
+
+// ── Form Submit ────────────────────────────────────────────────
+async function submitForm() {
+
+    const brideName = document.getElementById("brideName").value.trim();
+    const groomName = document.getElementById("groomName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const weddingDate = document.getElementById("weddingDate").value;
+    const guests = document.getElementById("guests").value;
+    const pkg = document.getElementById("pkg").value;
+    const city = document.getElementById("city").value.trim();
+    const vision = document.getElementById("vision").value.trim();
+
+    if (
+        !brideName ||
+        !groomName ||
+        !email ||
+        !phone ||
+        !weddingDate
+    ) {
+        alert("Please fill all mandatory fields.");
+        return;
+    }
+
+    const payload = {
+        name: brideName + " & " + groomName,
+        phone: phone,
+        email: email,
+        eventType: pkg,
+        eventDate: weddingDate,
+        guests: guests,
+        requirements:
+            "City: " + city +
+            "\n\nWedding Vision:\n" + vision
+    };
+
+    const button = document.querySelector("#booking button");
+
+    try {
+
+        button.disabled = true;
+        button.innerHTML =
+            '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+
+        const response = await fetch(
+            "http://localhost:8080/api/enquiry",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            }
+        );
+
+        if (response.ok) {
+
+            document.getElementById("successMsg").style.display = "block";
+
+            document.getElementById("brideName").value = "";
+            document.getElementById("groomName").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("weddingDate").value = "";
+            document.getElementById("guests").value = "";
+            document.getElementById("pkg").value = "";
+            document.getElementById("city").value = "";
+            document.getElementById("vision").value = "";
+
+            button.innerHTML =
+                '<i class="fas fa-check me-2"></i>Enquiry Sent';
+        } else {
+
+            alert("Failed to submit enquiry.");
+
+            button.disabled = false;
+            button.innerHTML =
+                '<i class="fas fa-paper-plane me-2"></i>Send My Enquiry';
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to connect to server. Please try again later."
+        );
+
+        button.disabled = false;
+        button.innerHTML =
+            '<i class="fas fa-paper-plane me-2"></i>Send My Enquiry';
+    }
+}
+// ── Parallax Hero ──────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const hero = document.querySelector('.hero-bg');
+  if (hero) hero.style.transform = `scale(1.05) translateY(${window.scrollY * 0.3}px)`;
+});
+</script>
+</body>
+</html>
