@@ -82,18 +82,19 @@
     }
     .nav-brand {
       font-family: 'Playfair Display', serif;
-      font-size: 1.7rem;
+      font-size: 1.2rem;
       color: var(--gold);
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      white-space: nowrap;
     }
     .nav-brand span { color: var(--deep); font-style: italic; }
     .nav-logo {
-      width: 48px;
-      height: 48px;
+      width: 38px;
+      height: 38px;
       object-fit: cover;
       border-radius: 50%;
       border: 2px solid var(--gold);
@@ -122,13 +123,14 @@
       object-position: center center;
     }
     .navbar-nav .nav-link {
-      font-size: 0.75rem;
-      letter-spacing: 2.5px;
+      font-size: 0.68rem;
+      letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--charcoal) !important;
-      margin: 0 10px;
+      margin: 0 4px;
       position: relative;
       transition: color 0.3s;
+      white-space: nowrap;
     }
     .navbar-nav .nav-link::after {
       content: '';
@@ -143,11 +145,12 @@
     .btn-nav {
       background: var(--gold);
       color: #fff !important;
-      padding: 8px 22px !important;
+      padding: 7px 14px !important;
       border-radius: 2px;
-      letter-spacing: 2px;
-      font-size: 0.7rem !important;
+      letter-spacing: 1px;
+      font-size: 0.68rem !important;
       transition: all 0.3s;
+      white-space: nowrap;
     }
     .btn-nav:hover { background: var(--gold-dark) !important; transform: translateY(-2px); }
 
@@ -800,6 +803,367 @@
     .float-btn.visible { opacity: 1; }
     .float-btn:hover { transform: scale(1.1) translateY(-3px); color: #fff; }
 
+    /* SIGNATURE EXPERIENCE */
+    #signature {
+      padding: 110px 0;
+      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+    }
+    #signature::before {
+      content: '✦';
+      position: absolute;
+      font-size: 30vw;
+      color: rgba(201,169,110,0.03);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+      font-family: 'Playfair Display', serif;
+    }
+    .sig-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,169,110,0.2);
+      padding: 48px 36px;
+      border-radius: 2px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(.23,1,.32,1);
+      height: 100%;
+    }
+    .sig-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    .sig-card:hover::after { transform: scaleX(1); }
+    .sig-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(201,169,110,0.5);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .sig-icon {
+      width: 80px; height: 80px;
+      border: 1px solid rgba(201,169,110,0.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 28px;
+      transition: all 0.3s;
+    }
+    .sig-card:hover .sig-icon { background: var(--gold); border-color: var(--gold); }
+    .sig-icon i { font-size: 1.6rem; color: var(--gold); transition: color 0.3s; }
+    .sig-card:hover .sig-icon i { color: #fff; }
+    .sig-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .sig-card p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.9;
+    }
+    .sig-quote {
+      max-width: 800px;
+      margin: 0 auto 70px;
+      text-align: center;
+    }
+    .sig-quote blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+      font-style: italic;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.8;
+      border-left: 3px solid var(--gold);
+      padding-left: 28px;
+      text-align: left;
+    }
+
+    /* VISION & MISSION */
+    #vision-mission {
+      padding: 110px 0;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    #vision-mission::before {
+      content: 'VISION';
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: 18vw;
+      color: var(--gold);
+      opacity: 0.03;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .vm-card {
+      background: #fff;
+      border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 2px;
+      padding: 56px 48px;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+    }
+    .vm-card:hover {
+      box-shadow: 0 20px 60px rgba(201,169,110,0.15);
+      transform: translateY(-6px);
+      border-color: var(--gold);
+    }
+    .vm-card-icon {
+      width: 70px; height: 70px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 28px;
+    }
+    .vm-card-icon i { color: #fff; font-size: 1.5rem; }
+    .vm-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--deep);
+      margin-bottom: 20px;
+    }
+    .vm-card p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.12rem;
+      color: #666;
+      line-height: 1.9;
+      margin-bottom: 0;
+    }
+    .vm-mission-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .vm-mission-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(201,169,110,0.1);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: #555;
+      line-height: 1.6;
+    }
+    .vm-mission-list li:last-child { border-bottom: none; }
+    .vm-mission-list li i { color: var(--gold); font-size: 0.8rem; margin-top: 5px; flex-shrink: 0; }
+
+    /* WHY CHOOSE US */
+    #why-choose {
+      padding: 110px 0;
+      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+    }
+    #why-choose .section-title { color: #fff; }
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 60px;
+    }
+    .why-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 28px 24px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 2px;
+      transition: all 0.35s ease;
+    }
+    .why-item:hover {
+      background: rgba(201,169,110,0.08);
+      border-color: var(--gold);
+      transform: translateX(6px);
+    }
+    .why-check {
+      width: 44px; height: 44px;
+      background: rgba(201,169,110,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .why-item:hover .why-check { background: var(--gold); }
+    .why-check i { color: var(--gold); font-size: 1rem; transition: color 0.3s; }
+    .why-item:hover .why-check i { color: #fff; }
+    .why-text h5 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .why-text p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.7;
+      margin: 0;
+    }
+    .why-intro {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.8;
+      font-style: italic;
+    }
+
+    /* OUR TEAM */
+    #team {
+      padding: 110px 0;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    #team::before {
+      content: 'TEAM';
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: 20vw;
+      color: var(--gold);
+      opacity: 0.03;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .team-card {
+      background: #fff;
+      border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 2px;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(.23,1,.32,1);
+      text-align: center;
+      height: 100%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .team-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 30px 60px rgba(201,169,110,0.2);
+      border-color: var(--gold);
+    }
+    .team-avatar-wrap {
+      background: var(--deep);
+      padding: 48px 0 36px;
+      position: relative;
+    }
+    .team-avatar-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 30px;
+      background: #fff;
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+    .team-avatar {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      background: rgba(201,169,110,0.15);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .team-body { padding: 30px 28px 40px; }
+    .team-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--deep);
+      margin-bottom: 6px;
+    }
+    .team-role {
+      font-size: 0.62rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 18px;
+    }
+    .team-divider {
+      width: 40px; height: 1px;
+      background: var(--gold);
+      margin: 0 auto 18px;
+      opacity: 0.6;
+    }
+    .team-desc {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: #777;
+      line-height: 1.8;
+    }
+
+    /* COMPANY HIGHLIGHTS */
+    #highlights {
+      padding: 90px 0;
+      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+    }
+    .highlight-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .highlight-item {
+      flex: 1;
+      min-width: 200px;
+      padding: 40px 28px;
+      text-align: center;
+      border-right: 1px solid rgba(201,169,110,0.15);
+      position: relative;
+      transition: all 0.3s;
+    }
+    .highlight-item:last-child { border-right: none; }
+    .highlight-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(201,169,110,0.06);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .highlight-item:hover::before { opacity: 1; }
+    .highlight-item:hover { transform: translateY(-4px); }
+    .highlight-icon {
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: block;
+    }
+    .highlight-item h5 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .highlight-item p {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+      margin: 0;
+    }
+
     /* RESPONSIVE */
     @media (max-width: 992px) {
       .about-text { padding-left: 0; margin-top: 50px; }
@@ -815,6 +1179,10 @@
     @media (max-width: 768px) {
       .about-stats { gap: 20px; }
       .hero-ctas { flex-direction: column; align-items: center; }
+      .vm-card { padding: 36px 28px; }
+      .why-grid { grid-template-columns: 1fr; }
+      .highlight-item { min-width: 160px; padding: 28px 16px; }
+      .sig-quote blockquote { font-size: 1.1rem; }
     }
   </style>
 </head>
@@ -832,7 +1200,7 @@
   <div class="container">
     <a class="nav-brand navbar-brand" href="#">
       <img src="/img/logo.jpeg" alt="VEL's U2 Logo" class="nav-logo" />
-      VEL's U2 <span>Event Management</span>
+      VEL's U2 <span class="d-none d-xl-inline">Event Management</span>
     </a>
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
       <span style="color:var(--gold);font-size:1.4rem;"><i class="fas fa-bars"></i></span>
@@ -842,8 +1210,8 @@
         <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
         <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
         <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
-        <li class="nav-item"><a class="nav-link" href="#packages">Packages</a></li>
-        <li class="nav-item"><a class="nav-link" href="#testimonials">Reviews</a></li>
+        <li class="nav-item"><a class="nav-link" href="#vision-mission">Vision</a></li>
+        <li class="nav-item"><a class="nav-link" href="#team">Our Team</a></li>
         <li class="nav-item ms-2"><a class="nav-link btn-nav" href="#booking">Book Now</a></li>
       </ul>
     </div>
@@ -909,6 +1277,44 @@
               <span class="stat-label">Design Styles</span>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNATURE EXPERIENCE -->
+<section id="signature">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <span class="section-label">✦ Our Signature Experience ✦</span>
+      <h2 class="section-title mb-4" style="color:#fff;">Where Every Detail Tells <em>Your Story</em></h2>
+      <div class="sig-quote reveal">
+        <blockquote>
+          "At VEL's U2 EVENT MANAGEMENT, we blend creativity, elegance, and professionalism to craft luxurious celebrations that leave lasting impressions. Every event is carefully designed with premium decoration concepts, stylish stage arrangements, lighting aesthetics, and flawless coordination."
+        </blockquote>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.1s">
+        <div class="sig-card">
+          <div class="sig-icon"><i class="fas fa-paint-brush"></i></div>
+          <h4>Creative Excellence</h4>
+          <p>We bring imaginative concepts to life — from grand stage setups to intricate floral artistry — each event a unique masterpiece crafted just for you.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.2s">
+        <div class="sig-card">
+          <div class="sig-icon"><i class="fas fa-crown"></i></div>
+          <h4>Elegant Luxury</h4>
+          <p>Premium decoration concepts, designer stage arrangements, and cinematic lighting aesthetics that transform any venue into a breathtaking celebration space.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.3s">
+        <div class="sig-card">
+          <div class="sig-icon"><i class="fas fa-handshake"></i></div>
+          <h4>Flawless Coordination</h4>
+          <p>Meticulous end-to-end event coordination ensuring every moment unfolds seamlessly — so you enjoy your celebration while we handle everything behind the scenes.</p>
         </div>
       </div>
     </div>
@@ -1028,74 +1434,102 @@
   </div>
 </section>
 
-<!-- PACKAGES -->
-<section id="packages">
+<!-- VISION & MISSION -->
+<section id="vision-mission">
   <div class="container">
     <div class="text-center mb-5 reveal">
-      <span class="section-label">Pricing</span>
-      <h2 class="section-title mb-3">Choose Your <em>Perfect</em> Package</h2>
-      <p style="color:#888;font-size:0.85rem;max-width:480px;margin:0 auto;">Transparent pricing with no hidden surprises — just pure wedding magic.</p>
+      <span class="section-label">Our Purpose</span>
+      <h2 class="section-title mb-3">Vision & <em>Mission</em></h2>
+      <p style="color:#888;font-size:0.85rem;max-width:500px;margin:0 auto;">Guided by a clear purpose — to create extraordinary moments that last a lifetime.</p>
     </div>
     <div class="row g-4 mt-2">
-      <div class="col-lg-4 reveal" style="transition-delay:0.1s">
-        <div class="pkg-card">
-          <div class="pkg-header">
-            <div class="pkg-name">Silver Bloom</div>
-            <div class="pkg-price"><sup>₹</sup>85,000 <span>starting</span></div>
+      <div class="col-lg-6 reveal" style="transition-delay:0.1s">
+        <div class="vm-card">
+          <div class="vm-card-icon"><i class="fas fa-eye"></i></div>
+          <h3>Our Vision</h3>
+          <div class="divider justify-content-start mb-4">
+            <div style="width:50px;height:1px;background:var(--gold);opacity:0.5;"></div>
+            <i class="fas fa-diamond" style="color:var(--gold);font-size:0.55rem;"></i>
           </div>
-          <div class="pkg-body">
-            <div class="pkg-feature"><i class="fas fa-check"></i> Basic Floral Decoration</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Mandap Setup</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Fairy Light Canopy</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> 1 Event Coordinator</div>
-            <div class="pkg-feature disabled"><i class="fas fa-times"></i> Photography Package</div>
-            <div class="pkg-feature disabled"><i class="fas fa-times"></i> Catering Coordination</div>
-            <div class="pkg-feature disabled"><i class="fas fa-times"></i> Entertainment Setup</div>
-            <div class="mt-4">
-              <a href="#booking" class="btn-outline-gold d-block text-center py-3" style="border-radius:2px;">Get Started</a>
-            </div>
-          </div>
+          <p>To become one of the most trusted and creative event management companies by delivering exceptional experiences with innovation, quality, and customer satisfaction.</p>
         </div>
       </div>
-      <div class="col-lg-4 reveal" style="transition-delay:0.2s">
-        <div class="pkg-card featured">
-          <div class="pkg-badge">Most Popular</div>
-          <div class="pkg-header">
-            <div class="pkg-name">Golden Aura</div>
-            <div class="pkg-price"><sup>₹</sup>1,85,000 <span>starting</span></div>
+      <div class="col-lg-6 reveal" style="transition-delay:0.2s">
+        <div class="vm-card">
+          <div class="vm-card-icon"><i class="fas fa-bullseye"></i></div>
+          <h3>Our Mission</h3>
+          <div class="divider justify-content-start mb-4">
+            <div style="width:50px;height:1px;background:var(--gold);opacity:0.5;"></div>
+            <i class="fas fa-diamond" style="color:var(--gold);font-size:0.55rem;"></i>
           </div>
-          <div class="pkg-body">
-            <div class="pkg-feature"><i class="fas fa-check"></i> Premium Floral Decoration</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Designer Mandap & Stage</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Full Lighting Design</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> 2 Event Coordinators</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Photography Package</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Catering Coordination</div>
-            <div class="pkg-feature disabled"><i class="fas fa-times"></i> Live Entertainment</div>
-            <div class="mt-4">
-              <a href="#booking" class="btn-gold d-block text-center py-3" style="border-radius:2px;">Book This Package</a>
-            </div>
-          </div>
+          <ul class="vm-mission-list">
+            <li><i class="fas fa-diamond"></i> To create unforgettable memories for every client.</li>
+            <li><i class="fas fa-diamond"></i> To deliver high-quality event services with professionalism.</li>
+            <li><i class="fas fa-diamond"></i> To provide unique and customized event experiences.</li>
+            <li><i class="fas fa-diamond"></i> To maintain excellence in planning, decoration, and execution.</li>
+          </ul>
         </div>
       </div>
-      <div class="col-lg-4 reveal" style="transition-delay:0.3s">
-        <div class="pkg-card">
-          <div class="pkg-header">
-            <div class="pkg-name">Royal Diamond</div>
-            <div class="pkg-price"><sup>₹</sup>3,50,000 <span>starting</span></div>
-          </div>
-          <div class="pkg-body">
-            <div class="pkg-feature"><i class="fas fa-check"></i> Luxury Floral Arrangements</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Grand Mandap & Stage</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Cinematic Lighting</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Dedicated Event Team</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Full Photography & Film</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Catering Coordination</div>
-            <div class="pkg-feature"><i class="fas fa-check"></i> Live Band & Entertainment</div>
-            <div class="mt-4">
-              <a href="#booking" class="btn-outline-gold d-block text-center py-3" style="border-radius:2px;">Get Started</a>
-            </div>
-          </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section id="why-choose">
+  <div class="container">
+    <div class="text-center mb-3 reveal">
+      <span class="section-label">Why Us</span>
+      <h2 class="section-title mb-4" style="color:#fff;">Why Choose <em>VEL's U2</em>?</h2>
+      <p class="why-intro reveal">Our company delivers a premium event experience with modern luxury concepts, elegant décor themes, and customized event execution that perfectly matches your dreams and expectations.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-item reveal" style="transition-delay:0.1s">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-text">
+          <h5>Professional Event Planning</h5>
+          <p>End-to-end planning handled by certified and experienced event professionals.</p>
+        </div>
+      </div>
+      <div class="why-item reveal" style="transition-delay:0.15s">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-text">
+          <h5>Creative & Modern Designs</h5>
+          <p>Fresh, innovative décor concepts that blend tradition with contemporary elegance.</p>
+        </div>
+      </div>
+      <div class="why-item reveal" style="transition-delay:0.2s">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-text">
+          <h5>Dedicated Team Support</h5>
+          <p>A passionate team committed to your event from the first call to the final farewell.</p>
+        </div>
+      </div>
+      <div class="why-item reveal" style="transition-delay:0.25s">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-text">
+          <h5>Budget-Friendly Packages</h5>
+          <p>Luxury experience at accessible price points — transparent pricing with zero hidden costs.</p>
+        </div>
+      </div>
+      <div class="why-item reveal" style="transition-delay:0.3s">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-text">
+          <h5>Timely Execution</h5>
+          <p>Punctual delivery and flawless execution — your event runs on time, every time.</p>
+        </div>
+      </div>
+      <div class="why-item reveal" style="transition-delay:0.35s">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-text">
+          <h5>Customer Satisfaction Focused</h5>
+          <p>Your happiness is our success metric — we go above and beyond every single time.</p>
+        </div>
+      </div>
+      <div class="why-item reveal" style="transition-delay:0.4s">
+        <div class="why-check"><i class="fas fa-check"></i></div>
+        <div class="why-text">
+          <h5>Personalized Event Experience</h5>
+          <p>No two events are the same — every celebration is uniquely tailored to reflect your story.</p>
         </div>
       </div>
     </div>
@@ -1145,55 +1579,90 @@
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
-<section id="testimonials">
+<!-- OUR TEAM -->
+<section id="team">
   <div class="container">
     <div class="text-center mb-5 reveal">
-      <span class="section-label">Love Stories</span>
-      <h2 class="section-title mb-3" style="color:#fff;">What Couples <em>Say</em></h2>
+      <span class="section-label">The People Behind The Magic</span>
+      <h2 class="section-title mb-3">Meet Our <em>Leadership</em></h2>
+      <p style="color:#888;font-size:0.85rem;max-width:500px;margin:0 auto;">Passionate, experienced, and dedicated — our Managing Directors bring your dream events to life with expertise and heart.</p>
     </div>
-    <div class="row g-4 mt-3">
-      <div class="col-lg-4 reveal" style="transition-delay:0.1s">
-        <div class="testi-card">
-          <div class="testi-quote">"</div>
-          <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-          <p class="testi-text">VEL’s U2 EVENT MANAGEMENT Weddings turned our dream into a reality beyond what we could have ever imagined. Every detail was perfect, from the flowers to the lighting — it felt like a fairytale.</p>
-          <div class="testi-author">
-            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="testi-avatar" alt="Priya" />
-            <div>
-              <div class="testi-name">Priya & Rohit Sharma</div>
-              <div class="testi-event">✦ Garden Wedding, Mumbai</div>
-            </div>
+    <div class="row g-4 justify-content-center mt-2">
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.1s">
+        <div class="team-card">
+          <div class="team-avatar-wrap">
+            <div class="team-avatar">DI</div>
+          </div>
+          <div class="team-body">
+            <div class="team-name">Dr. Indhupriya</div>
+            <span class="team-role">Managing Director</span>
+            <div class="team-divider"></div>
+            <p class="team-desc">A visionary leader with a deep passion for creating extraordinary celebrations. Dr. Indhupriya drives the creative direction and ensures every event meets the highest standards of elegance.</p>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 reveal" style="transition-delay:0.2s">
-        <div class="testi-card">
-          <div class="testi-quote">"</div>
-          <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-          <p class="testi-text">Working with the VEL’s U2 EVENT MANAGEMENT team was the best decision we made. They handled everything seamlessly and made sure we enjoyed every single moment without any stress.</p>
-          <div class="testi-author">
-            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="testi-avatar" alt="Ananya" />
-            <div>
-              <div class="testi-name">Ananya & Vikram Nair</div>
-              <div class="testi-event">✦ Palace Wedding, Jaipur</div>
-            </div>
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.2s">
+        <div class="team-card">
+          <div class="team-avatar-wrap">
+            <div class="team-avatar">VK</div>
+          </div>
+          <div class="team-body">
+            <div class="team-name">Vijay Kumar</div>
+            <span class="team-role">Managing Director</span>
+            <div class="team-divider"></div>
+            <p class="team-desc">With hands-on expertise in event coordination and client management, Vijay Kumar ensures seamless execution from concept to celebration — delivering on every promise made.</p>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 reveal" style="transition-delay:0.3s">
-        <div class="testi-card">
-          <div class="testi-quote">"</div>
-          <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-          <p class="testi-text">The mandap decoration was absolutely breathtaking. Our guests still talk about how stunning it was. VEL’s U2 EVENT MANAGEMENT delivered a celebration that was deeply personal and stunning.</p>
-          <div class="testi-author">
-            <img src="https://randomuser.me/api/portraits/women/23.jpg" class="testi-avatar" alt="Meera" />
-            <div>
-              <div class="testi-name">Meera & Arjun Patel</div>
-              <div class="testi-event">✦ Beachside Wedding, Goa</div>
-            </div>
+      <div class="col-lg-4 col-md-6 reveal" style="transition-delay:0.3s">
+        <div class="team-card">
+          <div class="team-avatar-wrap">
+            <div class="team-avatar">DH</div>
+          </div>
+          <div class="team-body">
+            <div class="team-name">Dhinesh</div>
+            <span class="team-role">Managing Director</span>
+            <div class="team-divider"></div>
+            <p class="team-desc">A creative force behind VEL's U2's signature decoration concepts and modern design aesthetics. Dhinesh brings an artist's eye and a professional's discipline to every event.</p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPANY HIGHLIGHTS -->
+<section id="highlights">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <span class="section-label">Our Track Record</span>
+      <h2 class="section-title mb-3" style="color:#fff;">Company <em>Highlights</em></h2>
+    </div>
+    <div class="highlight-strip reveal">
+      <div class="highlight-item">
+        <span class="highlight-icon"><i class="fas fa-calendar-check"></i></span>
+        <h5>3 Years Strong</h5>
+        <p>Successfully operating and growing since our founding in Dindigul</p>
+      </div>
+      <div class="highlight-item">
+        <span class="highlight-icon"><i class="fas fa-users"></i></span>
+        <h5>Passionate Organizers</h5>
+        <p>Experienced team with deep expertise across all event categories</p>
+      </div>
+      <div class="highlight-item">
+        <span class="highlight-icon"><i class="fas fa-shield-alt"></i></span>
+        <h5>Trusted by Clients</h5>
+        <p>Proven track record of quality event execution and happy clients</p>
+      </div>
+      <div class="highlight-item">
+        <span class="highlight-icon"><i class="fas fa-star"></i></span>
+        <h5>Modern Concepts</h5>
+        <p>Contemporary decoration ideas and stylish event themes every time</p>
+      </div>
+      <div class="highlight-item">
+        <span class="highlight-icon"><i class="fas fa-tasks"></i></span>
+        <h5>Start to Finish</h5>
+        <p>Professional coordination at every stage — nothing left to chance</p>
       </div>
     </div>
   </div>
@@ -1243,16 +1712,6 @@
               </select>
             </div>
             <div class="col-md-6">
-              <label class="form-label">Preferred Package</label>
-              <select class="form-select" id="pkg">
-                <option value="">Select package</option>
-                <option>Silver Bloom</option>
-                <option>Golden Aura</option>
-                <option>Royal Diamond</option>
-                <option>Custom Package</option>
-              </select>
-            </div>
-            <div class="col-md-6">
               <label class="form-label">Venue City</label>
               <input type="text" class="form-control" placeholder="Mumbai, Delhi, Goa..." id="city" />
             </div>
@@ -1284,7 +1743,7 @@
         <p class="footer-tagline">"Where love becomes art."</p>
         <p style="color:rgba(255,255,255,0.35);font-size:0.78rem;line-height:1.9;margin-bottom:24px;">Creating extraordinary celebrations across India since 2016. Every event is our masterpiece.</p>
         <div class="footer-social">
-          <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.instagram.com/u2_event?igsh=OW10NW53MDkxaHQ0" target="_blank" class="social-btn"><i class="fab fa-instagram"></i></a>
           <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
           <a href="#" class="social-btn"><i class="fab fa-pinterest-p"></i></a>
           <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
@@ -1297,8 +1756,8 @@
           <li><a href="#about">About Us</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#gallery">Gallery</a></li>
-          <li><a href="#packages">Packages</a></li>
-          <li><a href="#testimonials">Reviews</a></li>
+          <li><a href="#vision-mission">Vision & Mission</a></li>
+          <li><a href="#team">Our Team</a></li>
           <li><a href="#booking">Contact</a></li>
         </ul>
       </div>
@@ -1317,7 +1776,7 @@
         <div class="footer-heading">Contact Us</div>
         <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i> VEL’s U2 EVENT MANAGEMENT <br> Dindigul, Tamil Nadu</div>
         <div class="footer-contact-item"><i class="fas fa-phone"></i> +91 9566785416</div>
-        <!--<div class="footer-contact-item"><i class="fas fa-envelope"></i> hello@auraweddings.in</div>-->
+        <div class="footer-contact-item"><i class="fas fa-envelope"></i> u2eventmanagement26@gmail.com</div>
         <div class="footer-contact-item"><i class="fas fa-clock"></i> Mon–Sat: 9 AM – 7 PM</div>
       </div>
     </div>
@@ -1418,7 +1877,6 @@ async function submitForm() {
     const phone = document.getElementById("phone").value.trim();
     const weddingDate = document.getElementById("weddingDate").value;
     const guests = document.getElementById("guests").value;
-    const pkg = document.getElementById("pkg").value;
     const city = document.getElementById("city").value.trim();
     const vision = document.getElementById("vision").value.trim();
 
@@ -1437,7 +1895,7 @@ async function submitForm() {
         name: brideName + " & " + groomName,
         phone: phone,
         email: email,
-        eventType: pkg,
+        eventType: "",
         eventDate: weddingDate,
         guests: guests,
         requirements:
@@ -1474,7 +1932,6 @@ async function submitForm() {
             document.getElementById("phone").value = "";
             document.getElementById("weddingDate").value = "";
             document.getElementById("guests").value = "";
-            document.getElementById("pkg").value = "";
             document.getElementById("city").value = "";
             document.getElementById("vision").value = "";
 
